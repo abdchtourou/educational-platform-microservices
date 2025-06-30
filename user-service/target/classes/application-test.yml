@@ -1,0 +1,38 @@
+server:
+  port: 0 # Random port for testing
+
+spring:
+  application:
+    name: user-service-test
+  
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password
+  
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: false
+  
+  h2:
+    console:
+      enabled: false
+
+# Disable Eureka for tests
+eureka:
+  client:
+    enabled: false
+
+# Minimal logging for tests
+logging:
+  level:
+    com.elearningsystem.userservice: INFO
+    org.springframework.security: WARN
+
+# JWT settings for tests
+jwt:
+  secret: dGVzdFNlY3JldEtleUZvclRlc3RpbmdQdXJwb3Nlc09ubHk=
+  expiration: 3600000 # 1 hour 

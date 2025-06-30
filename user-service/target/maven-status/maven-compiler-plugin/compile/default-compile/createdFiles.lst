@@ -1,0 +1,10 @@
+com\elearningsystem\userservice\controller\UserController.class
+com\elearningsystem\userservice\UserServiceApplication.class
+com\elearningsystem\userservice\model\User$UserBuilder.class
+com\elearningsystem\userservice\config\PasswordConfig.class
+com\elearningsystem\userservice\model\Role.class
+com\elearningsystem\userservice\config\JwtUtil.class
+com\elearningsystem\userservice\service\UserService.class
+com\elearningsystem\userservice\model\User.class
+com\elearningsystem\userservice\repository\UserRepository.class
+com\elearningsystem\userservice\config\SecurityConfig.class
