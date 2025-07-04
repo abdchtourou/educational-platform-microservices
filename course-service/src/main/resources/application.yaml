@@ -1,2 +1,57 @@
 server:
-  port: 8080
+  port: 8082
+
+spring:
+  application:
+    name: course-service
+  
+  # H2 Database Configuration
+  datasource:
+    url: jdbc:h2:mem:coursedb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: 
+  
+  # H2 Console (for development/testing)
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+  
+  # JPA Configuration
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    prefer-ip-address: true
+
+# Actuator Configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
+
+# Logging Configuration
+logging:
+  level:
+    com.elearningsystem.course_service: DEBUG
+    org.springframework.web: DEBUG
+
+# JWT Configuration (must match user-service)
+jwt:
+  secret: bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25BbmRWYWxpZGF0aW9u
+  expiration: 86400000 # 24 hours in milliseconds

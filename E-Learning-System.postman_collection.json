@@ -1,0 +1,701 @@
+{
+	"info": {
+		"_postman_id": "e-learning-system-collection",
+		"name": "E-Learning System APIs",
+		"description": "Complete API collection for the E-Learning System microservices",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "userId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "courseId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "subscriptionId",
+			"value": "1",
+			"type": "string"
+		},
+		{
+			"key": "examId",
+			"value": "1",
+			"type": "string"
+		}
+	],
+	"item": [
+		{
+			"name": "User Service",
+			"item": [
+				{
+					"name": "Register Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"student1\",\n    \"email\": \"student1@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Student\",\n    \"role\": \"STUDENT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Register Instructor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"instructor1\",\n    \"email\": \"instructor1@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Instructor\",\n    \"role\": \"INSTRUCTOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Register Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"admin1\",\n    \"email\": \"admin1@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Admin\",\n    \"lastName\": \"User\",\n    \"role\": \"ADMIN\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get User by Username",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/users/username/student1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "username", "student1"]
+						}
+					}
+				},
+				{
+					"name": "Get User by Email",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/users/email/student1@example.com",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "email", "student1@example.com"]
+						}
+					}
+				},
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"firstName\": \"Updated John\",\n    \"lastName\": \"Updated Student\",\n    \"email\": \"updated.student1@example.com\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users", "{{userId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Course Service",
+			"item": [
+				{
+					"name": "Create Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Introduction to Spring Boot\",\n    \"description\": \"Learn the fundamentals of Spring Boot framework\",\n    \"trainer\": \"instructor1\",\n    \"price\": 99.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Get All Courses",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "Get Course by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/{{courseId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "{{courseId}}"]
+						}
+					}
+				},
+				{
+					"name": "Approve Course",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/{{courseId}}/approve",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "{{courseId}}", "approve"]
+						}
+					}
+				},
+				{
+					"name": "Reject Course",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/{{courseId}}/reject",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "{{courseId}}", "reject"]
+						}
+					}
+				},
+				{
+					"name": "Get Courses by Status - PENDING",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/status/PENDING",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "status", "PENDING"]
+						}
+					}
+				},
+				{
+					"name": "Get Courses by Status - APPROVED",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/status/APPROVED",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "status", "APPROVED"]
+						}
+					}
+				},
+				{
+					"name": "Get Courses by Trainer",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/trainer/instructor1",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "trainer", "instructor1"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Subscription Service",
+			"item": [
+				{
+					"name": "Create Subscription",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": {{userId}},\n    \"courseId\": {{courseId}}\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions"]
+						}
+					}
+				},
+				{
+					"name": "Get All Subscriptions",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions"]
+						}
+					}
+				},
+				{
+					"name": "Get Subscription by ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/{{subscriptionId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "{{subscriptionId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get User Subscriptions",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Mark Subscription as Paid",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/{{subscriptionId}}/pay",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "{{subscriptionId}}", "pay"]
+						}
+					}
+				},
+				{
+					"name": "Mark Subscription as Completed",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/{{subscriptionId}}/complete",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "{{subscriptionId}}", "complete"]
+						}
+					}
+				},
+				{
+					"name": "Get Paid Subscriptions",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/paid/true",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "paid", "true"]
+						}
+					}
+				},
+				{
+					"name": "Check User Subscription to Course",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/user/{{userId}}/course/{{courseId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "user", "{{userId}}", "course", "{{courseId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Exam Service",
+			"item": [
+				{
+					"name": "Create Exam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": {{courseId}},\n    \"title\": \"Spring Boot Fundamentals Quiz\",\n    \"questions\": \"{\\\"q1\\\": \\\"What is Spring Boot?\\\", \\\"q2\\\": \\\"What is auto-configuration?\\\"}\",\n    \"duration\": 60\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/exams",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams"]
+						}
+					}
+				},
+				{
+					"name": "Get All Exams",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/exams",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams"]
+						}
+					}
+				},
+				{
+					"name": "Get Exam by Course ID",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/exams/course/{{courseId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams", "course", "{{courseId}}"]
+						}
+					}
+				},
+				{
+					"name": "Submit Exam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": {{courseId}},\n    \"userId\": {{userId}},\n    \"answers\": \"{\\\"q1\\\": \\\"A Java framework\\\", \\\"q2\\\": \\\"Automatic configuration\\\"}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/exams/submit",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams", "submit"]
+						}
+					}
+				},
+				{
+					"name": "Get User Results",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/results/user/{{userId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "results", "user", "{{userId}}"]
+						}
+					}
+				},
+				{
+					"name": "Get Result by User and Course",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/api/results/user/{{userId}}/course/{{courseId}}",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "results", "user", "{{userId}}", "course", "{{courseId}}"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Health Checks",
+			"item": [
+				{
+					"name": "Discovery Server Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8761/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8761",
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "API Gateway Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "{{baseUrl}}/actuator/health",
+							"host": ["{{baseUrl}}"],
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "User Service Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8081/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8081",
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "Course Service Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8082/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8082",
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "Subscription Service Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8083/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8083",
+							"path": ["actuator", "health"]
+						}
+					}
+				},
+				{
+					"name": "Exam Service Health",
+					"request": {
+						"method": "GET",
+						"url": {
+							"raw": "http://localhost:8084/actuator/health",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "8084",
+							"path": ["actuator", "health"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Complete E-Learning Flow",
+			"item": [
+				{
+					"name": "1. Register Student",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"student1\",\n    \"email\": \"student1@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"John\",\n    \"lastName\": \"Student\",\n    \"role\": \"STUDENT\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "2. Register Instructor",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"instructor1\",\n    \"email\": \"instructor1@example.com\",\n    \"password\": \"password123\",\n    \"firstName\": \"Jane\",\n    \"lastName\": \"Instructor\",\n    \"role\": \"INSTRUCTOR\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/users",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "users"]
+						}
+					}
+				},
+				{
+					"name": "3. Create Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Java Programming Basics\",\n    \"description\": \"Learn Java from scratch\",\n    \"trainer\": \"instructor1\",\n    \"price\": 149.99\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/courses",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses"]
+						}
+					}
+				},
+				{
+					"name": "4. Approve Course",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/courses/1/approve",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "courses", "1", "approve"]
+						}
+					}
+				},
+				{
+					"name": "5. Subscribe to Course",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"userId\": 1,\n    \"courseId\": 1\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions"]
+						}
+					}
+				},
+				{
+					"name": "6. Mark Subscription as Paid",
+					"request": {
+						"method": "PUT",
+						"url": {
+							"raw": "{{baseUrl}}/api/subscriptions/1/pay",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "subscriptions", "1", "pay"]
+						}
+					}
+				},
+				{
+					"name": "7. Create Exam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": 1,\n    \"title\": \"Java Basics Final Exam\",\n    \"questions\": \"{\\\"q1\\\": \\\"What is Java?\\\", \\\"q2\\\": \\\"What is OOP?\\\"}\",\n    \"duration\": 90\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/exams",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams"]
+						}
+					}
+				},
+				{
+					"name": "8. Submit Exam",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"courseId\": 1,\n    \"userId\": 1,\n    \"answers\": \"{\\\"q1\\\": \\\"Programming language\\\", \\\"q2\\\": \\\"Object-oriented programming\\\"}\"\n}"
+						},
+						"url": {
+							"raw": "{{baseUrl}}/api/exams/submit",
+							"host": ["{{baseUrl}}"],
+							"path": ["api", "exams", "submit"]
+						}
+					}
+				}
+			]
+		}
+	]
+} 

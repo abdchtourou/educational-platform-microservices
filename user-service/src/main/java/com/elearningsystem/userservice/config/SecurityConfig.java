@@ -51,11 +51,12 @@ public class SecurityConfig {
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/eureka/**").permitAll()
                         
+                        // Authentication endpoints (public)
+                        .requestMatchers("/api/users/login").permitAll()
+                        .requestMatchers("/api/users/signup").permitAll()
+                        
                         // User registration endpoint (public)
                         .requestMatchers("POST", "/api/users").permitAll()
-                        
-                        // Authentication endpoints (will be added later)
-                        .requestMatchers("/api/auth/**").permitAll()
                         
                         // All other requests need authentication
                         .anyRequest().authenticated()
