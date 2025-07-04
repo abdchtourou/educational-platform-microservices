@@ -154,6 +154,38 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
     
+    /**
+     * GET /api/courses/trainer: get all courses for the currently authenticated trainer (derived from JWT)
+     */
+    @GetMapping("/trainer")
+    @PreAuthorize("hasAnyRole('INSTRUCTOR','ADMIN')")
+    public ResponseEntity<?> getCoursesForCurrentTrainer(
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
+        log.info("GET /api/courses/trainer - Fetching courses for current trainer based on JWT");
+
+        // Validate Authorization header
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authorization header with Bearer token is required"));
+        }
+
+        String token = authHeader.substring(7); // strip "Bearer "
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid or expired token"));
+        }
+
+        String trainerUsername = jwtUtil.extractUsername(token);
+        log.debug("Fetching courses for trainer username: {}", trainerUsername);
+
+        List<Course> trainerCourses = courseService.getCoursesForTrainer(trainerUsername);
+        List<CourseResponseDto> response = trainerCourses.stream()
+                .map(CourseResponseDto::fromEntity)
+                .collect(Collectors.toList());
+
+        return ResponseEntity.ok(response);
+    }
+    
     // Additional utility endpoints
     
     /**

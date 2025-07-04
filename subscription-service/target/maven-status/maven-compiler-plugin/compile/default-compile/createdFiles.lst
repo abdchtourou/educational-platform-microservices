@@ -4,6 +4,7 @@ com\elearningsystem\subscriptionservice\dto\SubscriptionRequestDto.class
 com\elearningsystem\subscriptionservice\model\Subscription.class
 com\elearningsystem\subscriptionservice\client\CourseClient.class
 com\elearningsystem\subscriptionservice\controller\SubscriptionController.class
+com\elearningsystem\subscriptionservice\config\SecurityConfig.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionRequestDto$SubscriptionRequestDtoBuilder.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionResponseDto$SubscriptionResponseDtoBuilder.class
 com\elearningsystem\subscriptionservice\service\SubscriptionService.class
@@ -11,5 +12,7 @@ com\elearningsystem\subscriptionservice\config\DatabaseConfig.class
 com\elearningsystem\subscriptionservice\model\Subscription$SubscriptionBuilder.class
 com\elearningsystem\subscriptionservice\SubscriptionServiceApplication.class
 com\elearningsystem\subscriptionservice\dto\CourseDTO.class
+com\elearningsystem\subscriptionservice\config\JwtAuthFilter.class
 com\elearningsystem\subscriptionservice\repository\SubscriptionRepository.class
 com\elearningsystem\subscriptionservice\client\CourseClientFallback.class
+com\elearningsystem\subscriptionservice\config\JwtUtil.class

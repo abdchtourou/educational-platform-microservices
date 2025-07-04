@@ -49,4 +49,7 @@ management:
 logging:
   level:
     com.elearningsystem.subscriptionservice: DEBUG
-    org.springframework.web: DEBUG 
+    org.springframework.web: DEBUG
+
+jwt:
+  secret: bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25BbmRWYWxpZGF0aW9u 

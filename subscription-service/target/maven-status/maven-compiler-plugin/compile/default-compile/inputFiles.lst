@@ -2,6 +2,9 @@ D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionse
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\client\CourseClientFallback.java
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\config\DatabaseConfig.java
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\config\DataInitializer.java
+D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\config\JwtAuthFilter.java
+D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\config\JwtUtil.java
+D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\config\SecurityConfig.java
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\controller\SubscriptionController.java
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\dto\CourseDTO.java
 D:\project\subscription-service\src\main\java\com\elearningsystem\subscriptionservice\dto\SubscriptionRequestDto.java

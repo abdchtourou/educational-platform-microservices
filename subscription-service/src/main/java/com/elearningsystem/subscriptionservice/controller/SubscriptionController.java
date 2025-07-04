@@ -4,15 +4,19 @@ import com.elearningsystem.subscriptionservice.dto.SubscriptionRequestDto;
 import com.elearningsystem.subscriptionservice.dto.SubscriptionResponseDto;
 import com.elearningsystem.subscriptionservice.model.Subscription;
 import com.elearningsystem.subscriptionservice.service.SubscriptionService;
+import com.elearningsystem.subscriptionservice.config.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/subscriptions")
@@ -22,15 +26,33 @@ import java.util.stream.Collectors;
 public class SubscriptionController {
     
     private final SubscriptionService subscriptionService;
+    private final JwtUtil jwtUtil;
     
     /**
      * Create a new subscription
      * POST /api/subscriptions
      */
+    @PreAuthorize("hasRole('STUDENT')")
     @PostMapping
-    public ResponseEntity<SubscriptionResponseDto> createSubscription(@Valid @RequestBody SubscriptionRequestDto request) {
+    public ResponseEntity<?> createSubscription(@Valid @RequestBody SubscriptionRequestDto request,
+                                                @RequestHeader(value = "Authorization", required = false) String authHeader) {
         log.info("POST /api/subscriptions - Creating subscription for user {} to course {}", request.getUserId(), request.getCourseId());
-        
+
+        // Validate Authorization header
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Authorization header with Bearer token is required"));
+        }
+
+        String token = authHeader.substring(7);
+        if (!jwtUtil.isTokenValid(token)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(Map.of("error", "Invalid or expired token"));
+        }
+
+        String usernameFromToken = jwtUtil.extractUsername(token);
+        // Optional: Ensure the userId matches the token's subject via user-service if needed
+ 
         try {
             Subscription subscription = subscriptionService.subscribeUserToCourse(
                     request.getUserId(),

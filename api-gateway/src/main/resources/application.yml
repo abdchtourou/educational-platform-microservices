@@ -43,6 +43,14 @@ spring:
           filters:
             - StripPrefix=0
 
+        # Subscription Service Routes
+        - id: subscription-service
+          uri: lb://subscription-service
+          predicates:
+            - Path=/api/subscriptions/**
+          filters:
+            - StripPrefix=0
+
 eureka:
   client:
     service-url:
