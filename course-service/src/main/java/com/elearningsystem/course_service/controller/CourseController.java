@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import jakarta.validation.Valid;
 import java.util.List;
@@ -31,6 +32,7 @@ public class CourseController {
      * POST /api/courses: add a new course (by trainer)
      */
     @PostMapping
+    @PreAuthorize("hasAnyRole('INSTRUCTOR','ADMIN')")
     public ResponseEntity<?> addCourse(@Valid @RequestBody CourseRequestDto courseRequest,
                                       @RequestHeader(value = "Authorization", required = false) String authHeader) {
         log.info("POST /api/courses - Adding new course: {}", courseRequest.getTitle());
@@ -80,6 +82,7 @@ public class CourseController {
      * PUT /api/courses/{id}/approve: approve a course (by admin)
      */
     @PutMapping("/{id}/approve")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StatusUpdateResponseDto> approveCourse(@PathVariable Long id) {
         log.info("PUT /api/courses/{}/approve - Approving course", id);
         
@@ -102,6 +105,7 @@ public class CourseController {
      * PUT /api/courses/{id}/reject: reject a course
      */
     @PutMapping("/{id}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StatusUpdateResponseDto> rejectCourse(@PathVariable Long id) {
         log.info("PUT /api/courses/{}/reject - Rejecting course", id);
         
