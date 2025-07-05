@@ -30,9 +30,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     public AuthResponse login(LoginRequest loginRequest) {
-        log.info("Attempting login for username: {}", loginRequest.getUsername());
-        
-        // Authenticate the user
+
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(),
