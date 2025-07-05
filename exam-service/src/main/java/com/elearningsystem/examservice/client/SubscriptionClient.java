@@ -14,5 +14,5 @@ public interface SubscriptionClient {
     SubscriptionDTO getSubscriptionById(@PathVariable("id") Long id);
     
     @GetMapping("/api/subscriptions/user/{userId}/course/{courseId}")
-    Boolean isUserSubscribedToCourse(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId);
+    java.util.Map<String, Boolean> isUserSubscribedToCourse(@PathVariable("userId") Long userId, @PathVariable("courseId") Long courseId);
 } 

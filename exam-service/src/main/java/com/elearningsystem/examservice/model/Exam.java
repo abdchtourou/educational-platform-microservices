@@ -21,7 +21,13 @@ public class Exam {
     @Column(name = "course_id", nullable = false)
     private Long courseId;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "questions", columnDefinition = "TEXT")
     private String questions; // JSON string
+
+    @Column(name = "duration")
+    private Integer duration; // Duration in minutes
 
 } 

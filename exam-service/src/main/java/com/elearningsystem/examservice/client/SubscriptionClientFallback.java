@@ -12,11 +12,18 @@ public class SubscriptionClientFallback implements SubscriptionClient {
 
     @Override
     public SubscriptionDTO getSubscriptionById(Long id) {
-        return new SubscriptionDTO(id, null, null, false, false, null);
+        SubscriptionDTO dto = new SubscriptionDTO();
+        dto.setId(id);
+        dto.setUserId(null);
+        dto.setCourseId(null);
+        dto.setIsPaid(false);
+        dto.setIsCompleted(false);
+        dto.setEnrolledAt(null);
+        return dto;
     }
 
     @Override
-    public Boolean isUserSubscribedToCourse(Long userId, Long courseId) {
-        return false; // Default to not subscribed when service is down
+    public java.util.Map<String, Boolean> isUserSubscribedToCourse(Long userId, Long courseId) {
+        return java.util.Map.of("isSubscribed", false); // Default to not subscribed when service is down
     }
 } 

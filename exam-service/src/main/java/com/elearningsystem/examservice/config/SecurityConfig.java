@@ -1,9 +1,8 @@
-package com.elearningsystem.subscriptionservice.config;
+package com.elearningsystem.examservice.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -26,7 +25,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                     // Public endpoints
                     .requestMatchers("/h2-console/**", "/actuator/**").permitAll()
-                    // All subscription endpoints require authentication (roles handled by @PreAuthorize)
+                    // All exam endpoints require authentication (roles handled by @PreAuthorize)
                     .anyRequest().authenticated())
             // Add JWT filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

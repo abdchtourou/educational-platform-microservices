@@ -1,9 +1,9 @@
 package com.elearningsystem.course_service.service;
 
-import com.elearningsystem.course_service.client.UserClient;
 import com.elearningsystem.course_service.dto.UserDTO;
 import com.elearningsystem.course_service.model.Course;
 import com.elearningsystem.course_service.repository.CourseRepository;
+import com.elearningsystem.course_service.service.ResilientUserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.Optional;
 public class CourseService {
     
     private final CourseRepository courseRepository;
-    private final UserClient userClient;
+    private final ResilientUserService resilientUserService;
     
     /**
      * Add a new course with default status: PENDING
@@ -89,7 +89,7 @@ public class CourseService {
      */
     public UserDTO getUserById(Long userId) {
         log.info("Fetching user details for userId: {}", userId);
-        return userClient.getUserById(userId);
+        return resilientUserService.getUserById(userId);
     }
     
     /**
@@ -97,7 +97,7 @@ public class CourseService {
      */
     public UserDTO getUserByEmail(String email) {
         log.info("Fetching user details for email: {}", email);
-        return userClient.getUserByEmail(email);
+        return resilientUserService.getUserByEmail(email);
     }
     
     /**
@@ -107,7 +107,7 @@ public class CourseService {
         log.info("Adding new course with trainer validation: {}", course.getTitle());
         
         // Validate trainer exists
-        UserDTO trainer = userClient.getUserById(trainerId);
+        UserDTO trainer = resilientUserService.getUserById(trainerId);
         if (trainer == null || trainer.getId() == null) {
             throw new RuntimeException("Trainer not found with id: " + trainerId);
         }

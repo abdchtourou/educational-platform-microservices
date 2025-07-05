@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -83,9 +82,10 @@ public class SubscriptionService {
     /**
      * Get subscription by id
      */
-    public Optional<Subscription> getSubscriptionById(Long id) {
+    public Subscription getSubscriptionById(Long id) {
         log.info("Fetching subscription with id: {}", id);
-        return subscriptionRepository.findById(id);
+        return subscriptionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Subscription not found with id: " + id));
     }
     
     /**

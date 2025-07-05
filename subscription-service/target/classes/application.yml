@@ -51,5 +51,44 @@ logging:
     com.elearningsystem.subscriptionservice: DEBUG
     org.springframework.web: DEBUG
 
+# Resilience4j Configuration for course-service communication
+resilience4j:
+  circuitbreaker:
+    instances:
+      course-service:
+        register-health-indicator: true
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+        slow-call-rate-threshold: 50
+        slow-call-duration-threshold: 2s
+        
+  retry:
+    instances:
+      course-service:
+        max-attempts: 3
+        wait-duration: 1s
+        exponential-backoff-multiplier: 2
+        retry-exceptions:
+          - java.net.ConnectException
+          - java.net.SocketTimeoutException
+          - feign.RetryableException
+          - java.util.concurrent.TimeoutException
+          
+  timelimiter:
+    instances:
+      course-service:
+        timeout-duration: 3s
+        cancel-running-future: true
+        
+  bulkhead:
+    instances:
+      course-service:
+        max-concurrent-calls: 10
+        max-wait-duration: 1s
+
 jwt:
   secret: bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25BbmRWYWxpZGF0aW9u 

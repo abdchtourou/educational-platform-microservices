@@ -1,5 +1,6 @@
 package com.elearningsystem.examservice.controller;
 
+import com.elearningsystem.examservice.dto.ExamSubmissionRequest;
 import com.elearningsystem.examservice.model.Exam;
 import com.elearningsystem.examservice.model.Result;
 import com.elearningsystem.examservice.service.ExamService;
@@ -7,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +22,7 @@ public class ExamController {
 
     private final ExamService examService;
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/exams")
     public ResponseEntity<List<Exam>> getAllExams() {
         log.info("Getting all exams");
@@ -27,6 +30,7 @@ public class ExamController {
         return ResponseEntity.ok(exams);
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @PostMapping("/exams")
     public ResponseEntity<Exam> createExam(@RequestBody Exam exam) {
         log.info("Creating exam for course: {}", exam.getCourseId());
@@ -34,6 +38,7 @@ public class ExamController {
         return new ResponseEntity<>(createdExam, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/exams/course/{courseId}")
     public ResponseEntity<Exam> getExamByCourse(@PathVariable Long courseId) {
         log.info("Getting exam for course: {}", courseId);
@@ -42,25 +47,27 @@ public class ExamController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/exams/{courseId}/submit")
-    public ResponseEntity<Result> submitExam(
-            @PathVariable Long courseId,
-            @RequestBody Map<String, Object> submissionData) {
+    @PreAuthorize("hasRole('STUDENT')")
+    @PostMapping("/exams/submit")
+    public ResponseEntity<?> submitExam(@RequestBody ExamSubmissionRequest request) {
         
-        Long userId = Long.valueOf(submissionData.get("userId").toString());
-        String answers = submissionData.get("answers").toString();
+        log.info("Submitting exam for course: {} by user: {}", request.getCourseId(), request.getUserId());
         
-        log.info("Submitting exam for course: {} by user: {}", courseId, userId);
+        // Validate request
+        if (request.getCourseId() == null || request.getUserId() == null || request.getAnswers() == null) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Missing required fields: courseId, userId, or answers"));
+        }
         
         try {
-            Result result = examService.submitExam(courseId, userId, answers);
+            Result result = examService.submitExam(request.getCourseId(), request.getUserId(), request.getAnswers());
             return ResponseEntity.ok(result);
         } catch (RuntimeException e) {
             log.error("Error submitting exam: {}", e.getMessage());
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.badRequest().body(Map.of("error", e.getMessage()));
         }
     }
 
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/results/user/{userId}")
     public ResponseEntity<List<Result>> getResultsByUser(@PathVariable Long userId) {
         log.info("Getting results for user: {}", userId);
@@ -68,6 +75,7 @@ public class ExamController {
         return ResponseEntity.ok(results);
     }
 
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/results/user/{userId}/course/{courseId}")
     public ResponseEntity<Result> getResultByUserAndCourse(
             @PathVariable Long userId,

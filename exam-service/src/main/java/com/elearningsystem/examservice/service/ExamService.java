@@ -1,6 +1,5 @@
 package com.elearningsystem.examservice.service;
 
-import com.elearningsystem.examservice.client.SubscriptionClient;
 import com.elearningsystem.examservice.dto.SubscriptionDTO;
 import com.elearningsystem.examservice.model.Exam;
 import com.elearningsystem.examservice.model.Result;
@@ -11,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -20,7 +20,7 @@ public class ExamService {
 
     private final ExamRepository examRepository;
     private final ResultRepository resultRepository;
-    private final SubscriptionClient subscriptionClient;
+    private final ResilientSubscriptionService resilientSubscriptionService;
 
     public List<Exam> getAllExams() {
         log.info("Getting all exams");
@@ -40,15 +40,32 @@ public class ExamService {
     public Result submitExam(Long courseId, Long userId, String answers) {
         log.info("Submitting exam for course: {} by user: {}", courseId, userId);
         
-        // Check if user is subscribed to the course
-        Boolean isSubscribed = subscriptionClient.isUserSubscribedToCourse(userId, courseId);
-        if (!isSubscribed) {
-            throw new RuntimeException("User is not subscribed to this course");
+        // Check if user is subscribed to the course using resilient service
+        try {
+            Map<String, Boolean> subscriptionResponse = resilientSubscriptionService.isUserSubscribedToCourse(userId, courseId);
+            Boolean isSubscribed = subscriptionResponse != null ? subscriptionResponse.get("isSubscribed") : false;
+            System.out.println("Checking subscription for user: " + userId + " and course: " + courseId);
+            System.out.println("Subscription response: " + subscriptionResponse);
+            if (isSubscribed == null || !isSubscribed) {
+                log.error("User {} is not subscribed to course {}", userId, courseId);
+                throw new RuntimeException("User is not subscribed to this course. Please subscribe first to take the exam.");
+            } else {
+                log.info("User {} is subscribed to course {}, proceeding with exam submission", userId, courseId);
+            }
+        } catch (Exception e) {
+            log.error("Error checking subscription for user {} and course {}: {}", userId, courseId, e.getMessage());
+            throw new RuntimeException("Unable to verify subscription status. Please try again later or contact support.");
         }
         
         // Get the exam
-        Exam exam = examRepository.findByCourseId(courseId)
-                .orElseThrow(() -> new RuntimeException("Exam not found for course: " + courseId));
+        log.info("Looking for exam with courseId: {}", courseId);
+        Optional<Exam> examOptional = examRepository.findByCourseId(courseId);
+        if (examOptional.isEmpty()) {
+            log.error("No exam found for course: {}", courseId);
+            throw new RuntimeException("Exam not found for course: " + courseId + ". Please make sure an exam exists for this course.");
+        }
+        Exam exam = examOptional.get();
+        log.info("Found exam: {} for course: {}", exam.getTitle(), courseId);
 
         // Calculate score (simplified logic - in real scenario, you'd parse JSON and calculate)
         Double score = calculateScore(exam.getQuestions(), answers);
@@ -76,25 +93,24 @@ public class ExamService {
     }
 
     /**
-     * Get user subscriptions
+     * Get user subscriptions with resilience patterns
      */
     public SubscriptionDTO[] getUserSubscriptions(Long userId) {
         log.info("Fetching subscriptions for user: {}", userId);
-        return subscriptionClient.getUserSubscriptions(userId);
+        return resilientSubscriptionService.getUserSubscriptions(userId);
     }
     
     /**
-     * Check if user is subscribed to course
+     * Check if user is subscribed to course with resilience patterns
      */
     public Boolean isUserSubscribedToCourse(Long userId, Long courseId) {
         log.info("Checking if user {} is subscribed to course {}", userId, courseId);
-        return subscriptionClient.isUserSubscribedToCourse(userId, courseId);
+        Map<String, Boolean> subscriptionResponse = resilientSubscriptionService.isUserSubscribedToCourse(userId, courseId);
+        return subscriptionResponse.get("isSubscribed");
     }
 
     private Double calculateScore(String questions, String answers) {
-        // Simplified scoring logic - in real scenario, you'd parse JSON
-        // and compare correct answers with submitted answers
-        // For now, return a random score between 40-100
+    
         return 70.0 + (Math.random() * 30);
     }
 } 
