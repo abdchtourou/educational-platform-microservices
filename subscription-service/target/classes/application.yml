@@ -35,6 +35,17 @@ eureka:
   instance:
     prefer-ip-address: true
 
+# Feign Configuration
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 5000
+        loggerLevel: full
+  circuitbreaker:
+    enabled: true
+
 # Actuator Configuration
 management:
   endpoints:
@@ -50,6 +61,11 @@ logging:
   level:
     com.elearningsystem.subscriptionservice: DEBUG
     org.springframework.web: DEBUG
+    com.elearningsystem.subscriptionservice.client.CourseClient: DEBUG
+    com.elearningsystem.subscriptionservice.service.ResilientCourseService: DEBUG
+    io.github.resilience4j: DEBUG
+    feign: DEBUG
+    feign.Logger: DEBUG
 
 # Resilience4j Configuration for course-service communication
 resilience4j:

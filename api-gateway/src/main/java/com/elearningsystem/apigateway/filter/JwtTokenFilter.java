@@ -11,31 +11,34 @@ import reactor.core.publisher.Mono;
 
 @Component
 @Slf4j
-public class LoggingFilter implements GlobalFilter, Ordered {
+public class JwtTokenFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        String path = exchange.getRequest().getPath().value();
-        String method = exchange.getRequest().getMethod().name();
-        String host = exchange.getRequest().getHeaders().getFirst("Host");
         String authHeader = exchange.getRequest().getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
         
-        log.info("🌐 Gateway Request: {} {} from host: {}", method, path, host);
-        if (authHeader != null) {
-            log.debug("🔐 Authorization header present: {}", 
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            log.info("🔐 Forwarding JWT token to downstream service: {}", 
                      authHeader.substring(0, Math.min(authHeader.length(), 20)) + "...");
+            
+            // Create a new request with the Authorization header
+            ServerWebExchange modifiedExchange = exchange.mutate()
+                    .request(exchange.getRequest().mutate()
+                            .header(HttpHeaders.AUTHORIZATION, authHeader)
+                            .build())
+                    .build();
+            
+            return chain.filter(modifiedExchange);
         } else {
-            log.debug("🔐 No Authorization header found");
+            log.debug("🔐 No Bearer token found in request to: {}", 
+                     exchange.getRequest().getPath().value());
         }
         
-        return chain.filter(exchange).then(Mono.fromRunnable(() -> {
-            int statusCode = exchange.getResponse().getStatusCode().value();
-            log.info("🔄 Gateway Response: {} {} -> Status: {}", method, path, statusCode);
-        }));
+        return chain.filter(exchange);
     }
 
     @Override
     public int getOrder() {
-        return -1; // Execute this filter first
+        return -2; // Execute before LoggingFilter
     }
 } 

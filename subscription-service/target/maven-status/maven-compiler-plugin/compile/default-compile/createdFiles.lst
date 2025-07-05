@@ -1,7 +1,10 @@
+com\elearningsystem\subscriptionservice\config\SecurityContextPropagationConfig.class
 com\elearningsystem\subscriptionservice\config\DataInitializer.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionResponseDto.class
+com\elearningsystem\subscriptionservice\config\FeignClientConfig.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionRequestDto.class
 com\elearningsystem\subscriptionservice\model\Subscription.class
+com\elearningsystem\subscriptionservice\service\ResilientCourseService.class
 com\elearningsystem\subscriptionservice\client\CourseClient.class
 com\elearningsystem\subscriptionservice\controller\SubscriptionController.class
 com\elearningsystem\subscriptionservice\config\SecurityConfig.class

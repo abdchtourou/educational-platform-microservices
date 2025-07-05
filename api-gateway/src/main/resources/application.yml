@@ -69,4 +69,6 @@ management:
 logging:
   level:
     org.springframework.cloud.gateway: DEBUG
-    org.springframework.cloud.netflix.eureka: DEBUG 
+    org.springframework.cloud.netflix.eureka: DEBUG
+    com.elearningsystem.apigateway.filter: DEBUG
+    org.springframework.web.server: DEBUG 

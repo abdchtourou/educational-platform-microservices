@@ -15,6 +15,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.Map;
+import com.elearningsystem.subscriptionservice.dto.CourseDTO;
 
 @RestController
 @RequestMapping("/api/subscriptions")
@@ -167,5 +168,38 @@ public class SubscriptionController {
         
         boolean isSubscribed = subscriptionService.isUserSubscribedToCourse(userId, courseId);
         return ResponseEntity.ok(Map.of("isSubscribed", isSubscribed));
+    }
+    
+    /**
+     * Get course details (through course-service with resilience)
+     * GET /api/subscriptions/course/{courseId}
+     */
+    @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
+    @GetMapping("/course/{courseId}")
+    public CourseDTO getCourseDetails(@PathVariable Long courseId) {
+        log.info("GET /api/subscriptions/course/{} - Fetching course details via course-service", courseId);
+        return subscriptionService.fetchCourse(courseId);
+    }
+    
+    /**
+     * Test endpoint to verify JWT token forwarding
+     * GET /api/subscriptions/test-auth
+     */
+    @GetMapping("/test-auth")
+    public ResponseEntity<Map<String, Object>> testAuth() {
+        log.info("GET /api/subscriptions/test-auth - Testing authentication");
+        
+        // Get current authentication
+        org.springframework.security.core.Authentication auth = 
+            org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
+        
+        Map<String, Object> response = Map.of(
+            "authenticated", auth != null && auth.isAuthenticated(),
+            "username", auth != null ? auth.getName() : "null",
+            "authorities", auth != null ? auth.getAuthorities().toString() : "null",
+            "credentials", auth != null && auth.getCredentials() != null ? "present" : "null"
+        );
+        
+        return ResponseEntity.ok(response);
     }
 } 

@@ -1,9 +1,9 @@
 package com.elearningsystem.subscriptionservice.service;
 
-import com.elearningsystem.subscriptionservice.client.CourseClient;
 import com.elearningsystem.subscriptionservice.dto.CourseDTO;
 import com.elearningsystem.subscriptionservice.model.Subscription;
 import com.elearningsystem.subscriptionservice.repository.SubscriptionRepository;
+import com.elearningsystem.subscriptionservice.service.ResilientCourseService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @Service
 @RequiredArgsConstructor
@@ -19,7 +21,7 @@ import java.util.List;
 public class SubscriptionService {
     
     private final SubscriptionRepository subscriptionRepository;
-    private final CourseClient courseClient;
+    private final ResilientCourseService resilientCourseService;
     
     /**
      * Subscribe a user to a course
@@ -124,6 +126,14 @@ public class SubscriptionService {
      */
     public CourseDTO fetchCourse(Long courseId) {
         log.info("Fetching course details for courseId: {}", courseId);
-        return courseClient.getCourseById(courseId);
+        try {
+            CompletableFuture<CourseDTO> future = resilientCourseService.getCourseById(courseId);
+            return future.get(); // Wait for the async result
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error fetching course {}: {}", courseId, e.getMessage());
+            throw new RuntimeException("Failed to fetch course details", e);
+        }
     }
+
+   
 } 

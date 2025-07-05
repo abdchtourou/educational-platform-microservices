@@ -31,24 +31,27 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                     FilterChain filterChain) throws ServletException, IOException {
         String authHeader = request.getHeader("Authorization");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            log.debug("No Bearer token found in request to {} {}", request.getMethod(), request.getRequestURI());
             filterChain.doFilter(request, response);
             return;
         }
 
         String token = authHeader.substring(7);
         if (!jwtUtil.isTokenValid(token)) {
-            log.warn("Invalid JWT token received");
+            log.warn("Token failed validation in subscription-service");
             filterChain.doFilter(request, response);
             return;
         }
 
         String username = jwtUtil.extractUsername(token);
         String role = jwtUtil.extractClaim(token, claims -> (String) claims.get("role"));
+        log.debug("Token accepted. username={}, role={}", username, role);
         Collection<? extends GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority("ROLE_" + role));
+        log.debug("Authorities set on SecurityContext: {}", authorities);
 
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                 username,
-                null,
+                token,
                 authorities);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authentication);
