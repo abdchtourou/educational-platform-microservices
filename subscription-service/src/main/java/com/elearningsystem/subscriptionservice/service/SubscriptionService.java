@@ -23,13 +23,10 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final ResilientCourseService resilientCourseService;
     
-    /**
-     * Subscribe a user to a course
-     */
+ 
     public Subscription subscribeUserToCourse(Long userId, Long courseId) {
         log.info("Subscribing user {} to course {}", userId, courseId);
         
-        // Check if user is already subscribed to this course
         if (subscriptionRepository.existsByUserIdAndCourseId(userId, courseId)) {
             throw new RuntimeException("User is already subscribed to this course");
         }
@@ -45,17 +42,13 @@ public class SubscriptionService {
         return subscriptionRepository.save(subscription);
     }
     
-    /**
-     * Get all subscriptions for a user
-     */
+
     public List<Subscription> getUserSubscriptions(Long userId) {
         log.info("Fetching subscriptions for user: {}", userId);
         return subscriptionRepository.findByUserId(userId);
     }
     
-    /**
-     * Mark subscription as paid
-     */
+  
     public Subscription markSubscriptionAsPaid(Long subscriptionId) {
         log.info("Marking subscription {} as paid", subscriptionId);
         
@@ -67,9 +60,7 @@ public class SubscriptionService {
                 .orElseThrow(() -> new RuntimeException("Subscription not found with id: " + subscriptionId));
     }
     
-    /**
-     * Mark subscription as completed
-     */
+   
     public Subscription markSubscriptionAsCompleted(Long subscriptionId) {
         log.info("Marking subscription {} as completed", subscriptionId);
         
@@ -81,54 +72,42 @@ public class SubscriptionService {
                 .orElseThrow(() -> new RuntimeException("Subscription not found with id: " + subscriptionId));
     }
     
-    /**
-     * Get subscription by id
-     */
+
     public Subscription getSubscriptionById(Long id) {
         log.info("Fetching subscription with id: {}", id);
         return subscriptionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Subscription not found with id: " + id));
     }
     
-    /**
-     * Get all subscriptions
-     */
+   
     public List<Subscription> getAllSubscriptions() {
         log.info("Fetching all subscriptions");
         return subscriptionRepository.findAll();
     }
     
-    /**
-     * Get subscriptions by payment status
-     */
+
     public List<Subscription> getSubscriptionsByPaymentStatus(Boolean isPaid) {
         log.info("Fetching subscriptions with payment status: {}", isPaid);
         return subscriptionRepository.findByIsPaid(isPaid);
     }
     
-    /**
-     * Get subscriptions by completion status
-     */
+
     public List<Subscription> getSubscriptionsByCompletionStatus(Boolean isCompleted) {
         log.info("Fetching subscriptions with completion status: {}", isCompleted);
         return subscriptionRepository.findByIsCompleted(isCompleted);
     }
     
-    /**
-     * Check if user is subscribed to a course
-     */
+
     public boolean isUserSubscribedToCourse(Long userId, Long courseId) {
         return subscriptionRepository.existsByUserIdAndCourseId(userId, courseId);
     }
     
-    /**
-     * Fetch course details from course-service
-     */
+
     public CourseDTO fetchCourse(Long courseId) {
         log.info("Fetching course details for courseId: {}", courseId);
         try {
             CompletableFuture<CourseDTO> future = resilientCourseService.getCourseById(courseId);
-            return future.get(); // Wait for the async result
+            return future.get(); 
         } catch (InterruptedException | ExecutionException e) {
             log.error("Error fetching course {}: {}", courseId, e.getMessage());
             throw new RuntimeException("Failed to fetch course details", e);

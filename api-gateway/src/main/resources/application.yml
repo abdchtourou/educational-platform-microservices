@@ -11,15 +11,14 @@ spring:
           enabled: true
           lower-case-service-id: true
       routes:
-        # User Service Routes
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/api/users/**,/api/auth/**
           filters:
             - StripPrefix=0
+            
 
-        # Course Service Routes  
         - id: course-service
           uri: lb://course-service
           predicates:
@@ -27,7 +26,6 @@ spring:
           filters:
             - StripPrefix=0
 
-        # Exam Service Routes
         - id: exam-service
           uri: lb://exam-service
           predicates:
@@ -35,7 +33,6 @@ spring:
           filters:
             - StripPrefix=0
 
-        # Discovery Server Route (for Eureka dashboard)
         - id: discovery-server
           uri: http://localhost:8761
           predicates:
@@ -43,7 +40,6 @@ spring:
           filters:
             - StripPrefix=0
 
-        # Subscription Service Routes
         - id: subscription-service
           uri: lb://subscription-service
           predicates:

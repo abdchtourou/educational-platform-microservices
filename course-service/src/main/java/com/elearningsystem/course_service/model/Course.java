@@ -31,7 +31,7 @@ public class Course {
     private Double price;
     
     @Column(nullable = false)
-    private Integer duration; // in hours
+    private Integer duration; 
     
     @Enumerated(EnumType.STRING)
     private CourseStatus status;

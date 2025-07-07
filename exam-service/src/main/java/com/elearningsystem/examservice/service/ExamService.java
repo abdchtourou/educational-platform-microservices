@@ -40,7 +40,6 @@ public class ExamService {
     public Result submitExam(Long courseId, Long userId, String answers) {
         log.info("Submitting exam for course: {} by user: {}", courseId, userId);
         
-        // Check if user is subscribed to the course using resilient service
         try {
             Map<String, Boolean> subscriptionResponse = resilientSubscriptionService.isUserSubscribedToCourse(userId, courseId);
             Boolean isSubscribed = subscriptionResponse != null ? subscriptionResponse.get("isSubscribed") : false;
@@ -57,7 +56,6 @@ public class ExamService {
             throw new RuntimeException("Unable to verify subscription status. Please try again later or contact support.");
         }
         
-        // Get the exam
         log.info("Looking for exam with courseId: {}", courseId);
         Optional<Exam> examOptional = examRepository.findByCourseId(courseId);
         if (examOptional.isEmpty()) {
@@ -67,11 +65,9 @@ public class ExamService {
         Exam exam = examOptional.get();
         log.info("Found exam: {} for course: {}", exam.getTitle(), courseId);
 
-        // Calculate score (simplified logic - in real scenario, you'd parse JSON and calculate)
         Double score = calculateScore(exam.getQuestions(), answers);
         Boolean isPassed = score >= 60.0; // Pass threshold is 60%
 
-        // Create and save result
         Result result = Result.builder()
                 .userId(userId)
                 .courseId(courseId)
@@ -92,17 +88,13 @@ public class ExamService {
         return resultRepository.findByUserIdAndCourseId(userId, courseId);
     }
 
-    /**
-     * Get user subscriptions with resilience patterns
-     */
+  
     public SubscriptionDTO[] getUserSubscriptions(Long userId) {
         log.info("Fetching subscriptions for user: {}", userId);
         return resilientSubscriptionService.getUserSubscriptions(userId);
     }
     
-    /**
-     * Check if user is subscribed to course with resilience patterns
-     */
+ 
     public Boolean isUserSubscribedToCourse(Long userId, Long courseId) {
         log.info("Checking if user {} is subscribed to course {}", userId, courseId);
         Map<String, Boolean> subscriptionResponse = resilientSubscriptionService.isUserSubscribedToCourse(userId, courseId);

@@ -1,5 +1,4 @@
 com\elearningsystem\subscriptionservice\config\SecurityContextPropagationConfig.class
-com\elearningsystem\subscriptionservice\config\DataInitializer.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionResponseDto.class
 com\elearningsystem\subscriptionservice\config\FeignClientConfig.class
 com\elearningsystem\subscriptionservice\dto\SubscriptionRequestDto.class

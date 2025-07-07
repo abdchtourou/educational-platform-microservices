@@ -21,7 +21,6 @@ public class JwtTokenFilter implements GlobalFilter, Ordered {
             log.info("🔐 Forwarding JWT token to downstream service: {}", 
                      authHeader.substring(0, Math.min(authHeader.length(), 20)) + "...");
             
-            // Create a new request with the Authorization header
             ServerWebExchange modifiedExchange = exchange.mutate()
                     .request(exchange.getRequest().mutate()
                             .header(HttpHeaders.AUTHORIZATION, authHeader)

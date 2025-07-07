@@ -36,6 +36,6 @@ public class LoggingFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -1; // Execute this filter first
+        return -1; 
     }
 } 

@@ -60,7 +60,7 @@ logging:
     com.elearningsystem.userservice: DEBUG
     org.springframework.security: DEBUG
 
-# JWT Configuration
+
 jwt:
   secret: bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25BbmRWYWxpZGF0aW9u
-  expiration: 86400000 # 24 hours in milliseconds 
+  expiration: 86400000

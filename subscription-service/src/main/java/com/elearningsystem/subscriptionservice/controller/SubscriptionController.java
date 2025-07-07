@@ -26,10 +26,7 @@ public class SubscriptionController {
     
     private final SubscriptionService subscriptionService;
     
-    /**
-     * Create a new subscription
-     * POST /api/subscriptions
-     */
+    
     @PreAuthorize("hasRole('STUDENT')")
     @PostMapping
     public ResponseEntity<?> createSubscription(@Valid @RequestBody SubscriptionRequestDto request) {
@@ -49,10 +46,7 @@ public class SubscriptionController {
         }
     }
     
-    /**
-     * Get all subscriptions (Admin/Instructor only)
-     * GET /api/subscriptions
-     */
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping
     public ResponseEntity<List<SubscriptionResponseDto>> getAllSubscriptions() {
@@ -66,10 +60,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Get subscription by ID
-     * GET /api/subscriptions/{id}
-     */
+ 
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/{id}")
     public ResponseEntity<SubscriptionResponseDto> getSubscriptionById(@PathVariable Long id) {
@@ -85,10 +76,7 @@ public class SubscriptionController {
         }
     }
     
-    /**
-     * Get all subscriptions for a user
-     * GET /api/subscriptions/user/{userId}
-     */
+
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<SubscriptionResponseDto>> getUserSubscriptions(@PathVariable Long userId) {
@@ -102,10 +90,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Mark subscription as paid
-     * PUT /api/subscriptions/{id}/pay
-     */
+    
     @PreAuthorize("hasRole('STUDENT')")
     @PutMapping("/{id}/pay")
     public ResponseEntity<SubscriptionResponseDto> markSubscriptionAsPaid(@PathVariable Long id) {
@@ -120,11 +105,7 @@ public class SubscriptionController {
             return ResponseEntity.notFound().build();
         }
     }
-    
-    /**
-     * Mark subscription as completed
-     * PUT /api/subscriptions/{id}/complete
-     */
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @PutMapping("/{id}/complete")
     public ResponseEntity<SubscriptionResponseDto> markSubscriptionAsCompleted(@PathVariable Long id) {
@@ -140,10 +121,7 @@ public class SubscriptionController {
         }
     }
     
-    /**
-     * Get subscriptions by payment status
-     * GET /api/subscriptions/paid/{isPaid}
-     */
+  
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/paid/{isPaid}")
     public ResponseEntity<List<SubscriptionResponseDto>> getSubscriptionsByPaymentStatus(@PathVariable Boolean isPaid) {
@@ -157,10 +135,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * Check if user is subscribed to course
-     * GET /api/subscriptions/user/{userId}/course/{courseId}
-     */
+
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/user/{userId}/course/{courseId}")
     public ResponseEntity<Map<String, Boolean>> isUserSubscribedToCourse(@PathVariable Long userId, @PathVariable Long courseId) {
@@ -170,10 +145,7 @@ public class SubscriptionController {
         return ResponseEntity.ok(Map.of("isSubscribed", isSubscribed));
     }
     
-    /**
-     * Get course details (through course-service with resilience)
-     * GET /api/subscriptions/course/{courseId}
-     */
+    
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/course/{courseId}")
     public CourseDTO getCourseDetails(@PathVariable Long courseId) {
@@ -181,15 +153,12 @@ public class SubscriptionController {
         return subscriptionService.fetchCourse(courseId);
     }
     
-    /**
-     * Test endpoint to verify JWT token forwarding
-     * GET /api/subscriptions/test-auth
-     */
+   
     @GetMapping("/test-auth")
     public ResponseEntity<Map<String, Object>> testAuth() {
         log.info("GET /api/subscriptions/test-auth - Testing authentication");
         
-        // Get current authentication
+        
         org.springframework.security.core.Authentication auth = 
             org.springframework.security.core.context.SecurityContextHolder.getContext().getAuthentication();
         

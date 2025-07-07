@@ -25,7 +25,6 @@ public class ExamController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/exams")
     public ResponseEntity<List<Exam>> getAllExams() {
-        log.info("Getting all exams");
         List<Exam> exams = examService.getAllExams();
         return ResponseEntity.ok(exams);
     }
@@ -33,7 +32,6 @@ public class ExamController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @PostMapping("/exams")
     public ResponseEntity<Exam> createExam(@RequestBody Exam exam) {
-        log.info("Creating exam for course: {}", exam.getCourseId());
         Exam createdExam = examService.createExam(exam);
         return new ResponseEntity<>(createdExam, HttpStatus.CREATED);
     }
@@ -41,7 +39,6 @@ public class ExamController {
     @PreAuthorize("hasRole('STUDENT') or hasRole('ADMIN') or hasRole('INSTRUCTOR')")
     @GetMapping("/exams/course/{courseId}")
     public ResponseEntity<Exam> getExamByCourse(@PathVariable Long courseId) {
-        log.info("Getting exam for course: {}", courseId);
         return examService.getExamByCourseId(courseId)
                 .map(exam -> ResponseEntity.ok(exam))
                 .orElse(ResponseEntity.notFound().build());

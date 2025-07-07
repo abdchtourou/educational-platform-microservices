@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 public class SubscriptionClientFallback implements SubscriptionClient {
     @Override
     public SubscriptionDTO[] getUserSubscriptions(Long userId) {
-        return new SubscriptionDTO[0]; // Return empty array when service is down
+        return new SubscriptionDTO[0]; 
     }
 
     @Override
@@ -24,6 +24,6 @@ public class SubscriptionClientFallback implements SubscriptionClient {
 
     @Override
     public java.util.Map<String, Boolean> isUserSubscribedToCourse(Long userId, Long courseId) {
-        return java.util.Map.of("isSubscribed", false); // Default to not subscribed when service is down
+        return java.util.Map.of("isSubscribed", false); 
     }
 } 

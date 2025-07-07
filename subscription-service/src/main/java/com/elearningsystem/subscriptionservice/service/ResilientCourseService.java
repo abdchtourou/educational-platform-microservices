@@ -27,7 +27,7 @@ public class ResilientCourseService {
     @TimeLimiter(name = "course-service")
     @Bulkhead(name = "course-service")
     public CompletableFuture<CourseDTO> getCourseById(Long id) {
-        // Capture the current SecurityContext
+       
         SecurityContext securityContext = SecurityContextHolder.getContext();
         Authentication authentication = securityContext.getAuthentication();
         
@@ -36,7 +36,7 @@ public class ResilientCourseService {
         
         return CompletableFuture.supplyAsync(() -> {
             try {
-                // Set the SecurityContext in the new thread
+               
                 SecurityContextHolder.setContext(securityContext);
                 
                 CourseDTO course = courseClient.getCourseById(id);
@@ -47,13 +47,12 @@ public class ResilientCourseService {
                 log.error("Full stack trace:", e);
                 throw new RuntimeException("Failed to fetch course", e);
             } finally {
-                // Clean up the SecurityContext
                 SecurityContextHolder.clearContext();
             }
         });
     }
 
-    // Fallback method for async calls
+   
     public CompletableFuture<CourseDTO> fallbackGetCourseById(Long id, Exception ex) {
         log.error("Fallback triggered for course {}", id);
         log.error("Fallback reason: {}", ex.getMessage());

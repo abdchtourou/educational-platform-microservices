@@ -24,17 +24,11 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                    // Public endpoints
                     .requestMatchers("/h2-console/**", "/actuator/**").permitAll()
-                    // Course creation – INSTRUCTOR or ADMIN
-                    .requestMatchers(HttpMethod.POST, "/api/courses").hasAnyRole("INSTRUCTOR", "ADMIN")
-                    // Approve / Reject – ADMIN only
+                    .requestMatchers(HttpMethod.POST, "/api/courses"). hasAnyRole("INSTRUCTOR", "ADMIN")
                     .requestMatchers(HttpMethod.PUT, "/api/courses/*/approve", "/api/courses/*/reject").hasRole("ADMIN")
-                    // Everything else requires authentication
                     .anyRequest().authenticated())
-            // Add JWT filter
             .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-            // Allow H2 console frames
             .headers(headers -> headers.frameOptions(frameOptionsConfig -> frameOptionsConfig.disable()));
 
         return http.build();

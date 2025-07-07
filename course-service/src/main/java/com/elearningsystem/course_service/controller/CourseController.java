@@ -28,46 +28,37 @@ public class CourseController {
     private final CourseService courseService;
     private final JwtUtil jwtUtil;
     
-    /**
-     * POST /api/courses: add a new course (by trainer)
-     */
+    
     @PostMapping
     @PreAuthorize("hasAnyRole('INSTRUCTOR','ADMIN')")
     public ResponseEntity<?> addCourse(@Valid @RequestBody CourseRequestDto courseRequest,
                                       @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        log.info("POST /api/courses - Adding new course: {}", courseRequest.getTitle());
         
-        // Extract instructor from JWT token
         String instructor;
         try {
             if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-                log.warn("Missing or invalid Authorization header");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Authorization header is required"));
             }
             
-            String token = authHeader.substring(7); // Remove "Bearer " prefix
-            log.debug("Extracted token: {}", token.substring(0, Math.min(token.length(), 20)) + "...");
+            String token = authHeader.substring(7); 
             
             if (!jwtUtil.isTokenValid(token)) {
-                log.warn("Token validation failed");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                         .body(Map.of("error", "Invalid or expired token"));
             }
             
             instructor = jwtUtil.extractUsername(token);
-            log.info("Course creation requested by instructor: {}", instructor);
             
         } catch (Exception e) {
-            log.error("Error processing JWT token: {}", e.getMessage(), e);
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid token: " + e.getMessage()));
         }
         
-        Course course = Course.builder()
+    Course course = Course.builder()
                 .title(courseRequest.getTitle())
                 .description(courseRequest.getDescription())
-                .trainer(instructor) // Use instructor from JWT token
+                .trainer(instructor) 
                 .price(courseRequest.getPrice())
                 .duration(courseRequest.getDuration())
                 .build();
@@ -78,13 +69,9 @@ public class CourseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     
-    /**
-     * PUT /api/courses/{id}/approve: approve a course (by admin)
-     */
     @PutMapping("/{id}/approve")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StatusUpdateResponseDto> approveCourse(@PathVariable Long id) {
-        log.info("PUT /api/courses/{}/approve - Approving course", id);
         
         try {
             Course originalCourse = courseService.getCourseById(id)
@@ -101,9 +88,7 @@ public class CourseController {
         }
     }
     
-    /**
-     * PUT /api/courses/{id}/reject: reject a course
-     */
+    
     @PutMapping("/{id}/reject")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<StatusUpdateResponseDto> rejectCourse(@PathVariable Long id) {
@@ -124,12 +109,8 @@ public class CourseController {
         }
     }
     
-    /**
-     * GET /api/courses: get all approved courses (for users)
-     */
     @GetMapping
     public ResponseEntity<List<CourseResponseDto>> getAllApprovedCourses() {
-        log.info("GET /api/courses - Fetching all approved courses");
         
         List<Course> approvedCourses = courseService.getCoursesByStatus(Course.CourseStatus.APPROVED);
         List<CourseResponseDto> response = approvedCourses.stream()
@@ -139,12 +120,9 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * GET /api/courses/trainer/{trainerId}: get all courses created by a trainer
-     */
+      
     @GetMapping("/trainer/{trainerId}")
     public ResponseEntity<List<CourseResponseDto>> getCoursesByTrainer(@PathVariable String trainerId) {
-        log.info("GET /api/courses/trainer/{} - Fetching courses for trainer", trainerId);
         
         List<Course> trainerCourses = courseService.getCoursesForTrainer(trainerId);
         List<CourseResponseDto> response = trainerCourses.stream()
@@ -154,29 +132,24 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
     
-    /**
-     * GET /api/courses/trainer: get all courses for the currently authenticated trainer (derived from JWT)
-     */
+    
     @GetMapping("/trainer")
     @PreAuthorize("hasAnyRole('INSTRUCTOR','ADMIN')")
     public ResponseEntity<?> getCoursesForCurrentTrainer(
             @RequestHeader(value = "Authorization", required = false) String authHeader) {
-        log.info("GET /api/courses/trainer - Fetching courses for current trainer based on JWT");
 
-        // Validate Authorization header
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Authorization header with Bearer token is required"));
         }
 
-        String token = authHeader.substring(7); // strip "Bearer "
+        String token = authHeader.substring(7); 
         if (!jwtUtil.isTokenValid(token)) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body(Map.of("error", "Invalid or expired token"));
         }
 
         String trainerUsername = jwtUtil.extractUsername(token);
-        log.debug("Fetching courses for trainer username: {}", trainerUsername);
 
         List<Course> trainerCourses = courseService.getCoursesForTrainer(trainerUsername);
         List<CourseResponseDto> response = trainerCourses.stream()
@@ -186,11 +159,7 @@ public class CourseController {
         return ResponseEntity.ok(response);
     }
     
-    // Additional utility endpoints
-    
-    /**
-     * GET /api/courses/all: get all courses (admin view)
-     */
+
     @GetMapping("/all")
     public ResponseEntity<List<CourseResponseDto>> getAllCourses() {
         log.info("GET /api/courses/all - Fetching all courses (admin view)");
@@ -202,10 +171,7 @@ public class CourseController {
         
         return ResponseEntity.ok(response);
     }
-    
-    /**
-     * GET /api/courses/{id}: get course by id
-     */
+
     @GetMapping("/{id}")
     public ResponseEntity<CourseResponseDto> getCourseById(@PathVariable Long id) {
         log.info("GET /api/courses/{} - Fetching course by id", id);
@@ -215,12 +181,9 @@ public class CourseController {
                 .orElse(ResponseEntity.notFound().build());
     }
     
-    /**
-     * GET /api/courses/status/{status}: get courses by status
-     */
+  
     @GetMapping("/status/{status}")
     public ResponseEntity<List<CourseResponseDto>> getCoursesByStatus(@PathVariable Course.CourseStatus status) {
-        log.info("GET /api/courses/status/{} - Fetching courses by status", status);
         
         List<Course> courses = courseService.getCoursesByStatus(status);
         List<CourseResponseDto> response = courses.stream()

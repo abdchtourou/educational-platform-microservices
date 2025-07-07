@@ -51,10 +51,9 @@ logging:
     com.elearningsystem.course_service: DEBUG
     org.springframework.web: DEBUG
 
-# JWT Configuration (must match user-service)
 jwt:
   secret: bXlTZWNyZXRLZXlGb3JKV1RUb2tlbkdlbmVyYXRpb25BbmRWYWxpZGF0aW9u
-  expiration: 86400000 # 24 hours in milliseconds
+  expiration: 86400000 
 
 resilience4j:
   circuitbreaker:
